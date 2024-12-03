@@ -44,7 +44,7 @@ def calculate_value(program):
     return total_value
 
 
-with open('day_3.txt') as ifile:
+with open('day_3_2.txt') as ifile:
     program = ifile.read()
 
 print(calculate_value(program))
