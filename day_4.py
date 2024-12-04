@@ -23,6 +23,18 @@ def count_in_position(x, y, letters):
     return count
 
 
+def count_xmas(x, y, letters):
+    if letters[x][y] != 'A':
+        return 0
+
+    if ((letters[x - 1][y - 1] == 'M' and letters[x + 1][y + 1] == 'S' or
+         letters[x - 1][y - 1] == 'S' and letters[x + 1][y + 1] == 'M')
+            and (letters[x - 1][y + 1] == 'M' and letters[x + 1][y - 1] == 'S' or
+                 letters[x - 1][y + 1] == 'S' and letters[x + 1][y - 1] == 'M')):
+        return 1
+    return 0
+
+
 with open('day_4.txt') as ifile:
     for line in ifile:
         level = [x for x in line.strip()]
@@ -33,5 +45,12 @@ total_count = 0
 for i in range(len(letters)):
     for j in range(len(letters[i])):
         total_count += count_in_position(i, j, letters)
+
+print(total_count)
+
+total_count = 0
+for i in range(1, len(letters) - 1):
+    for j in range(1, len(letters[i]) - 1):
+        total_count += count_xmas(i, j, letters)
 
 print(total_count)
