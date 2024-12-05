@@ -21,10 +21,28 @@ def check_correct_order(update, rules):
     return True
 
 
-result = 0
+def correct_order(update, rules):
+    i = 0
+    while i < len(update) - 1:
+        if update[i + 1] in rules.get(update[i], set()):
+            i += 1
+        else:
+            tmp = update[i]
+            update[i] = update[i + 1]
+            update[i + 1] = tmp
+            i = 0
+
+    return update
+
+
+first_result, second_result = 0, 0
 
 for update in updates:
     if check_correct_order(update, rules):
-        result += update[len(update) // 2]
+        first_result += update[len(update) // 2]
+    else:
+        update = correct_order(update, rules)
+        second_result += update[len(update) // 2]
 
-print(result)
+print(first_result)
+print(second_result)
