@@ -17,10 +17,9 @@ def is_valid(position):
     return 0 <= position[0] < len(guard_map) and 0 <= position[1] < len(guard_map[0])
 
 
-def generate_paths(current_position, direction_index, visited_places, current_track=None):
+def generate_paths(current_position, direction_index, visited_places):
     visited_places.add(current_position)
-    if not current_track:
-        current_track = {(current_position, direction_index)}
+    current_track = {(current_position, direction_index)}
 
     while True:
         direction = directions[direction_index % 4]
