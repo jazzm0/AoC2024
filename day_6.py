@@ -17,16 +17,16 @@ def is_valid(position):
     return 0 <= position[0] < len(guard_map) and 0 <= position[1] < len(guard_map[0])
 
 
-def generate_paths(current_position, visited_places):
+def generate_paths(current_position):
     direction_index = 0
-    visited_places.add(current_position)
+    visited_places = {current_position}
     current_track = {(current_position, direction_index)}
 
     while True:
         direction = directions[direction_index % 4]
         new_spot = (current_position[0] + direction[0], current_position[1] + direction[1])
         if not is_valid(new_spot):
-            return False
+            return False, visited_places
         else:
             if guard_map[new_spot[0]][new_spot[1]] == "#":
                 direction_index = (direction_index + 1) % 4
@@ -35,21 +35,20 @@ def generate_paths(current_position, visited_places):
                 if (current_position, direction_index) not in current_track:
                     current_track.add((current_position, direction_index))
                 else:
-                    return True
+                    return True, visited_places
                 visited_places.add(current_position)
 
 
 start = (x, y)
-visited = set()
 
-generate_paths(start, visited)
+_, visited = generate_paths(start)
 
 print(len(visited))
 counter = 0
 
 for x, y in visited:
     guard_map[x][y] = '#'
-    if generate_paths(start, set()):
+    if generate_paths(start)[0]:
         counter += 1
     guard_map[x][y] = '.'
 
