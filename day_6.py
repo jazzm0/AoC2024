@@ -17,7 +17,8 @@ def is_valid(position):
     return 0 <= position[0] < len(guard_map) and 0 <= position[1] < len(guard_map[0])
 
 
-def generate_paths(current_position, direction_index, visited_places):
+def generate_paths(current_position, visited_places):
+    direction_index = 0
     visited_places.add(current_position)
     current_track = {(current_position, direction_index)}
 
@@ -40,17 +41,16 @@ def generate_paths(current_position, direction_index, visited_places):
 
 start = (x, y)
 visited = set()
-di = 0
 
-generate_paths(start, di, visited)
+generate_paths(start, visited)
 
 print(len(visited))
 counter = 0
 
-for v in visited:
-    guard_map[v[0]][v[1]] = '#'
-    if generate_paths(start, di, set()):
+for x, y in visited:
+    guard_map[x][y] = '#'
+    if generate_paths(start, set()):
         counter += 1
-    guard_map[v[0]][v[1]] = '.'
+    guard_map[x][y] = '.'
 
 print(counter)
