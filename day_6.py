@@ -21,7 +21,7 @@ def generate_paths(current_position, direction_index, visited_places, current_tr
     visited_places.add(current_position)
     if not current_track:
         current_track = {(current_position, direction_index)}
-        
+
     while True:
         direction = directions[direction_index % 4]
         new_spot = (current_position[0] + direction[0], current_position[1] + direction[1])
@@ -48,12 +48,10 @@ generate_paths(start, di, visited)
 print(len(visited))
 counter = 0
 
-for r in range(len(guard_map)):
-    for c in range(len(guard_map[0])):
-        if (r, c) != start and guard_map[r][c] == '.':
-            guard_map[r][c] = '#'
-            if generate_paths(start, di, set()):
-                counter += 1
-            guard_map[r][c] = '.'
+for v in visited:
+    guard_map[v[0]][v[1]] = '#'
+    if generate_paths(start, di, set()):
+        counter += 1
+    guard_map[v[0]][v[1]] = '.'
 
 print(counter)
