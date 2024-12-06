@@ -3,7 +3,7 @@ visited = set()
 directions = [(-1, 0), (0, 1), (1, 0), (0, -1)]
 r, x, y = 0, 0, 0
 
-with open('day_6.txt') as ifile:
+with open('day_6_small.txt') as ifile:
     for line in ifile:
         row = [x for x in line.strip()]
         map.append(row)
@@ -16,10 +16,14 @@ with open('day_6.txt') as ifile:
 visited.add((x, y))
 current_spot = (x, y)
 di = 0
+def is_valid(position):
+    return 0 <= position[0] < len(map) and 0 <= position[1] < len(map[0])
+
+
 while True:
     direction = directions[di % 4]
     new_spot = (current_spot[0] + direction[0], current_spot[1] + direction[1])
-    if not (0 <= new_spot[0] < len(map) and 0 <= new_spot[1] < len(map[0])):
+    if not is_valid(new_spot):
         break
     else:
         if map[new_spot[0]][new_spot[1]] == "#":
