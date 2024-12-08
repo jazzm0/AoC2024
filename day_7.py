@@ -9,11 +9,15 @@ with open('day_7.txt') as ifile:
 def solve(test_result, numbers):
     results = set()
     results.add(numbers[0])
+    previous = numbers[0]
     for i in range(1, len(numbers)):
         new_results = set()
+        new_results.add(int(str(previous) + str(numbers[i])))
+        previous = numbers[i]
         for r in results:
             new_results.add(r * numbers[i])
             new_results.add(r + numbers[i])
+            new_results.add(int(str(r) + str(numbers[i])))
         results = new_results
     return test_result in results
 
