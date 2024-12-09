@@ -17,23 +17,17 @@ for index in range(len(disk_map)):
 def compact(disk):
     start, end = 0, len(disk) - 1
     while start < end:
-        while disk[start] != -1:
+        while start < end and disk[start] != -1:
             start += 1
-        while disk[end] == -1:
+        while start < end and disk[end] == -1:
             end -= 1
         if start < end:
-            disk[start] = disk[end]
-            disk[end] = -1
+            disk[start], disk[end] = disk[end], -1
     return disk
 
 
 def calc_checksum(disk):
-    checksum = 0
-    for index in range(len(disk)):
-        if disk[index] == -1:
-            continue
-        checksum += index * disk[index]
-    return checksum
+    return sum(index * value for index, value in enumerate(disk) if value != -1)
 
 
 def find_start_of_move_section(disk, element_id):
@@ -49,35 +43,26 @@ def find_start_of_move_section(disk, element_id):
 
 
 def find_free_space(disk, required_length):
-    for i in range(len(disk)):
-        length = 0
-        if disk[i] == -1:
-            for j in range(i, len(disk)):
-                if disk[j] == -1:
-                    length += 1
-                else:
-                    break
-        if length >= required_length:
-            return i
+    length = 0
+    for i, value in enumerate(disk):
+        if value == -1:
+            length += 1
+            if length >= required_length:
+                return i - required_length + 1
+        else:
+            length = 0
     return -1
 
 
-def swap(disk, start_of_free, start_of_section, length):
-    copied = 0
-    for index in range(start_of_free, start_of_free + length):
-        disk[index] = disk[start_of_section + copied]
-        disk[start_of_section + copied] = -1
-        copied += 1
-
-
 def compact_2(disk):
-    element_id = disk[-1]
-
+    element_id = max(disk)
     while element_id > 0:
-        start_of_section, length = find_start_of_move_section(disk, element_id)
+        start_of_section = disk.index(element_id)
+        length = disk[start_of_section:].count(element_id)
         start_of_free = find_free_space(disk, length)
         if 0 < start_of_free < start_of_section:
-            swap(disk, start_of_free, start_of_section, length)
+            for i in range(length):
+                disk[start_of_free + i], disk[start_of_section + i] = disk[start_of_section + i], -1
         element_id -= 1
     return disk
 
