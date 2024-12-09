@@ -72,7 +72,7 @@ def swap(disk, start_of_free, start_of_section, length):
 
 def compact_2(disk):
     element_id = disk[-1]
-    
+
     while element_id > 0:
         start_of_section, length = find_start_of_move_section(disk, element_id)
         start_of_free = find_free_space(disk, length)
