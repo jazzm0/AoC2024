@@ -21,24 +21,19 @@ def in_range(x, y):
 
 def generate_anti_nodes(antenna_positions):
     anti_nodes = set()
-    for frequency, positions in antenna_positions.items():
+    for positions in antenna_positions.values():
         for first in positions:
             for second in positions:
                 if first != second:
-                    anti_nodes.add(first)
-                    anti_nodes.add(second)
-
-                    delta_y = second[1] - first[1]
-                    delta_x = second[0] - first[0]
+                    anti_nodes.update({first, second})
+                    delta_x, delta_y = second[0] - first[0], second[1] - first[1]
 
                     x1, y1 = first[0] - delta_x, first[1] - delta_y
-
                     while in_range(x1, y1):
                         anti_nodes.add((x1, y1))
                         x1, y1 = x1 - delta_x, y1 - delta_y
 
                     x2, y2 = second[0] + delta_x, second[1] + delta_y
-
                     while in_range(x2, y2):
                         anti_nodes.add((x2, y2))
                         x2, y2 = x2 + delta_x, y2 + delta_y
