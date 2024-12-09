@@ -16,7 +16,7 @@ with open('day_8.txt') as ifile:
 
 
 def in_range(x, y):
-    return 0 <= x <= c and 0 <= y <= row
+    return 0 <= x < column and 0 <= y < row
 
 
 def generate_antinodes(antenna_positions):
@@ -25,8 +25,10 @@ def generate_antinodes(antenna_positions):
         for first in positions:
             for second in positions:
                 if first != second:
+                    
                     delta_y = second[1] - first[1]
                     delta_x = second[0] - first[0]
+
                     x1, y1 = first[0] - delta_x, first[1] - delta_y
 
                     if in_range(x1, y1) and (x1, y1) not in positions:
