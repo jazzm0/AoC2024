@@ -8,17 +8,17 @@ with open('day_11.txt') as ifile:
 
 
 def blink(number_counts):
-    new_number_counts = {}
-    for number, amount in number_counts.items():
+    new_number_counts = Counter()
+    for number, count in number_counts.items():
         length = len(str(number))
         if number == 0:
-            new_number_counts[1] = new_number_counts.get(1, 0) + amount
+            new_number_counts[1] += count
         elif length % 2 == 0:
-            low, high = int(str(number)[0:length // 2]), int(str(number)[length // 2:])
-            new_number_counts[low] = new_number_counts.get(low, 0) + amount
-            new_number_counts[high] = new_number_counts.get(high, 0) + amount
+            low, high = int(str(number)[:length // 2]), int(str(number)[length // 2:])
+            new_number_counts[low] += count
+            new_number_counts[high] += count
         else:
-            new_number_counts[number * 2024] = new_number_counts.get(number * 2024, 0) + amount
+            new_number_counts[number * 2024] += count
     return new_number_counts
 
 
