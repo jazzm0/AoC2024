@@ -14,9 +14,9 @@ def blink(number_counts):
         if number == 0:
             new_number_counts[1] += count
         elif length % 2 == 0:
-            low, high = int(str(number)[:length // 2]), int(str(number)[length // 2:])
-            new_number_counts[low] += count
+            high, low = int(str(number)[:length // 2]), int(str(number)[length // 2:])
             new_number_counts[high] += count
+            new_number_counts[low] += count
         else:
             new_number_counts[number * 2024] += count
     return new_number_counts
