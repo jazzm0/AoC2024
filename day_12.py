@@ -1,15 +1,26 @@
+import random
+
+from PIL import Image
+
 garden = []
 directions = [(-1, 0), (0, 1), (1, 0), (0, -1)]
+colors = {}
 
 with open('day_12.txt') as ifile:
     for line in ifile:
         garden.append([x for x in line.strip()])
 
 
+def random_color():
+    return tuple(random.randint(0, 255) for _ in range(3))
+
+
 def explore_region(x, y, regions, explored):
     if (x, y) in explored:
         return
     plant_type = garden[x][y]
+    if plant_type not in colors:
+        colors[plant_type] = random_color()
     region = set()
     next = {(x, y)}
     while next:
@@ -51,3 +62,13 @@ for region in regions:
     total_price += len(region) * calculate_perimeter(region)
 
 print(total_price)
+
+image = Image.new('RGB', (len(garden[0]), len(garden)))
+
+for i, region in enumerate(regions):
+    x, y = next(iter(region))
+    color = colors[garden[x][y]]
+    for x, y in region:
+        image.putpixel((y, x), color)
+
+image.save('garden_regions.png')
