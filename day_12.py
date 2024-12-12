@@ -29,17 +29,8 @@ def explore_region(x, y, regions, explored):
 
 
 def calculate_perimeter(region):
-    boundary_points = set()
-
-    for x, y in region:
-        for dx, dy in directions:
-            nx, ny = x + dx, y + dy
-            if (nx, ny) not in region:
-                boundary_points.add((x, y))
-                break
-
     perimeter = 0
-    for x, y in boundary_points:
+    for x, y in region:
         for dx, dy in directions:
             nx, ny = x + dx, y + dy
             if (nx, ny) not in region:
