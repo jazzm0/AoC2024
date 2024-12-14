@@ -51,7 +51,7 @@ def print_positions(positions, width, height):
         line = ""
         for x in range(width):
             if (y, x) in positions:
-                line += 'o'
+                line += '*'
             else:
                 line += '.'
         print(line)
@@ -86,5 +86,3 @@ for i in range(height * width + 1):
         print_positions(positions, width, height)
         print(i + 1)
         break
-
-print(max_symetry_count)
