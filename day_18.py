@@ -2,15 +2,17 @@ import heapq
 
 memory = [["." for i in range(71)] for j in range(71)]
 directions = [(-1, 0), (1, 0), (0, 1), (0, -1)]
+stuck = []
 
 fallen = 0
 with open('day_18.txt') as ifile:
     for line in ifile:
         coordinates = line.strip().split(",")
+        if fallen == 1024:
+            stuck.append((int(coordinates[0]), int(coordinates[1])))
+            continue
         memory[int(coordinates[1])][int(coordinates[0])] = "#"
         fallen += 1
-        if fallen == 1024:
-            break
 
 start, end = (0, 0), (len(memory) - 1, len(memory[0]) - 1)
 
@@ -61,3 +63,10 @@ def a_star_search(start, end):
 
 path = a_star_search(start, end)
 print(len(path) - 1)
+
+for stuck_position in stuck:
+    memory[stuck_position[1]][stuck_position[0]] = "#"
+    path = a_star_search(start, end)
+    if not path:
+        print(stuck_position)
+        break
