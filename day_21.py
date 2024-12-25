@@ -1,4 +1,4 @@
-from collections import deque, Counter
+from collections import deque
 
 codes = []
 keypad = {'7': (0, 0), '8': (0, 1), '9': (0, 2), '4': (1, 0), '5': (1, 1), '6': (1, 2), '1': (2, 0), '2': (2, 1),
@@ -11,10 +11,6 @@ with open('day_21.txt') as ifile:
     for line in ifile:
         code = line.strip()
         codes.append(code)
-
-
-def distance(a, b):
-    return abs(a[0] - b[0]) + abs(a[1] - b[1])
 
 
 def get_moves(sequence, pad):
@@ -59,10 +55,7 @@ def get_moves(sequence, pad):
 
 
 def convert_path(path):
-    result = ""
-    for s in path:
-        result += s
-    return result + "A"
+    return ''.join(path) + 'A'
 
 
 def convert_paths_to_sequence(paths):
@@ -70,38 +63,30 @@ def convert_paths_to_sequence(paths):
     for path in paths:
         new_sequences = []
         for i in range(len(path)):
-            if len(sequences) == 0:
+            if not sequences:
                 new_sequences.append(convert_path(path[i]))
-            for s in sequences:
-                new_sequences.append(s + convert_path(path[i]))
+            else:
+                for s in sequences:
+                    new_sequences.append(s + convert_path(path[i]))
         sequences = new_sequences
     return sequences
 
 
-def filter(sequences):
-    min_length = len(sequences[0])
-    lengths = Counter()
-    for i in range(len(sequences)):
-        lengths[len(sequences[i])] += 1
-        min_length = min(min_length, len(sequences[i]))
-    result = []
-    for i in range(len(sequences)):
-        if len(sequences[i]) == min_length:
-            result.append(sequences[i])
-    return result
+def filter_sequences(sequences):
+    min_length = min(len(seq) for seq in sequences)
+    return [seq for seq in sequences if len(seq) == min_length]
 
 
 total_value = 0
 for code in codes:
     sequences = convert_paths_to_sequence(get_moves(code, keypad))
 
-    for i in range(2):
+    for _ in range(2):
         next_sequences = []
         for s in sequences:
-            for ss in convert_paths_to_sequence(get_moves(s, directions_keypad)):
-                next_sequences.append(ss)
-        sequences = filter(next_sequences)
+            next_sequences.extend(convert_paths_to_sequence(get_moves(s, directions_keypad)))
+        sequences = filter_sequences(next_sequences)
 
-    total_value += len(sequences[0]) * int(code[0:-1])
+    total_value += len(sequences[0]) * int(code[:-1])
 
 print(total_value)
