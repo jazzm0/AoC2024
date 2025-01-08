@@ -1,0 +1,250 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 600px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+             #loadingBar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width: 100%;
+                 height: 600px;
+                 background-color:rgba(200,200,200,0.8);
+                 -webkit-transition: all 0.5s ease;
+                 -moz-transition: all 0.5s ease;
+                 -ms-transition: all 0.5s ease;
+                 -o-transition: all 0.5s ease;
+                 transition: all 0.5s ease;
+                 opacity:1;
+             }
+
+             #bar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width:20px;
+                 height:20px;
+                 margin:auto auto auto auto;
+                 border-radius:11px;
+                 border:2px solid rgba(30,30,30,0.05);
+                 background: rgb(0, 173, 246); /* Old browsers */
+                 box-shadow: 2px 0px 4px rgba(0,0,0,0.4);
+             }
+
+             #border {
+                 position:absolute;
+                 top:10px;
+                 left:10px;
+                 width:500px;
+                 height:23px;
+                 margin:auto auto auto auto;
+                 box-shadow: 0px 0px 4px rgba(0,0,0,0.2);
+                 border-radius:10px;
+             }
+
+             #text {
+                 position:absolute;
+                 top:8px;
+                 left:530px;
+                 width:30px;
+                 height:50px;
+                 margin:auto auto auto auto;
+                 font-size:22px;
+                 color: #000000;
+             }
+
+             div.outerBorder {
+                 position:relative;
+                 top:400px;
+                 width:600px;
+                 height:44px;
+                 margin:auto auto auto auto;
+                 border:8px solid rgba(0,0,0,0.1);
+                 background: rgb(252,252,252); /* Old browsers */
+                 background: -moz-linear-gradient(top,  rgba(252,252,252,1) 0%, rgba(237,237,237,1) 100%); /* FF3.6+ */
+                 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(252,252,252,1)), color-stop(100%,rgba(237,237,237,1))); /* Chrome,Safari4+ */
+                 background: -webkit-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Chrome10+,Safari5.1+ */
+                 background: -o-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Opera 11.10+ */
+                 background: -ms-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* IE10+ */
+                 background: linear-gradient(to bottom,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* W3C */
+                 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfcfc', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */
+                 border-radius:72px;
+                 box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+             }
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+            <div id="loadingBar">
+              <div class="outerBorder">
+                <div id="text">0%</div>
+                <div id="border">
+                  <div id="bar"></div>
+                </div>
+              </div>
+            </div>
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#97c2fc", "id": "ktr", "label": "ktr", "shape": "dot"}, {"color": "#97c2fc", "id": "cpc", "label": "cpc", "shape": "dot"}, {"color": "#97c2fc", "id": "z27", "label": "z27", "shape": "dot"}, {"color": "#97c2fc", "id": "hbk", "label": "hbk", "shape": "dot"}, {"color": "#97c2fc", "id": "fbg", "label": "fbg", "shape": "dot"}, {"color": "#97c2fc", "id": "z13", "label": "z13", "shape": "dot"}, {"color": "#97c2fc", "id": "rbm", "label": "rbm", "shape": "dot"}, {"color": "#97c2fc", "id": "tjp", "label": "tjp", "shape": "dot"}, {"color": "#97c2fc", "id": "z36", "label": "z36", "shape": "dot"}, {"color": "#97c2fc", "id": "y44", "label": "y44", "shape": "dot"}, {"color": "#97c2fc", "id": "x44", "label": "x44", "shape": "dot"}, {"color": "#97c2fc", "id": "njr", "label": "njr", "shape": "dot"}, {"color": "#97c2fc", "id": "x08", "label": "x08", "shape": "dot"}, {"color": "#97c2fc", "id": "y08", "label": "y08", "shape": "dot"}, {"color": "#97c2fc", "id": "cfd", "label": "cfd", "shape": "dot"}, {"color": "#97c2fc", "id": "gwg", "label": "gwg", "shape": "dot"}, {"color": "#97c2fc", "id": "ggg", "label": "ggg", "shape": "dot"}, {"color": "#97c2fc", "id": "z04", "label": "z04", "shape": "dot"}, {"color": "#97c2fc", "id": "y09", "label": "y09", "shape": "dot"}, {"color": "#97c2fc", "id": "x09", "label": "x09", "shape": "dot"}, {"color": "#97c2fc", "id": "dsc", "label": "dsc", "shape": "dot"}, {"color": "#97c2fc", "id": "ctp", "label": "ctp", "shape": "dot"}, {"color": "#97c2fc", "id": "rjr", "label": "rjr", "shape": "dot"}, {"color": "#97c2fc", "id": "msw", "label": "msw", "shape": "dot"}, {"color": "#97c2fc", "id": "hwk", "label": "hwk", "shape": "dot"}, {"color": "#97c2fc", "id": "jsw", "label": "jsw", "shape": "dot"}, {"color": "#97c2fc", "id": "fnt", "label": "fnt", "shape": "dot"}, {"color": "#97c2fc", "id": "x41", "label": "x41", "shape": "dot"}, {"color": "#97c2fc", "id": "y41", "label": "y41", "shape": "dot"}, {"color": "#97c2fc", "id": "qvg", "label": "qvg", "shape": "dot"}, {"color": "#97c2fc", "id": "bqj", "label": "bqj", "shape": "dot"}, {"color": "#97c2fc", "id": "dqj", "label": "dqj", "shape": "dot"}, {"color": "#97c2fc", "id": "tsk", "label": "tsk", "shape": "dot"}, {"color": "#97c2fc", "id": "y37", "label": "y37", "shape": "dot"}, {"color": "#97c2fc", "id": "x37", "label": "x37", "shape": "dot"}, {"color": "#97c2fc", "id": "stv", "label": "stv", "shape": "dot"}, {"color": "#97c2fc", "id": "tkm", "label": "tkm", "shape": "dot"}, {"color": "#97c2fc", "id": "z44", "label": "z44", "shape": "dot"}, {"color": "#97c2fc", "id": "x34", "label": "x34", "shape": "dot"}, {"color": "#97c2fc", "id": "y34", "label": "y34", "shape": "dot"}, {"color": "#97c2fc", "id": "gjj", "label": "gjj", "shape": "dot"}, {"color": "#97c2fc", "id": "x07", "label": "x07", "shape": "dot"}, {"color": "#97c2fc", "id": "y07", "label": "y07", "shape": "dot"}, {"color": "#97c2fc", "id": "sqm", "label": "sqm", "shape": "dot"}, {"color": "#97c2fc", "id": "x20", "label": "x20", "shape": "dot"}, {"color": "#97c2fc", "id": "y20", "label": "y20", "shape": "dot"}, {"color": "#97c2fc", "id": "ckr", "label": "ckr", "shape": "dot"}, {"color": "#97c2fc", "id": "x05", "label": "x05", "shape": "dot"}, {"color": "#97c2fc", "id": "y05", "label": "y05", "shape": "dot"}, {"color": "#97c2fc", "id": "skf", "label": "skf", "shape": "dot"}, {"color": "#97c2fc", "id": "hrn", "label": "hrn", "shape": "dot"}, {"color": "#97c2fc", "id": "bfj", "label": "bfj", "shape": "dot"}, {"color": "#97c2fc", "id": "z32", "label": "z32", "shape": "dot"}, {"color": "#97c2fc", "id": "rfc", "label": "rfc", "shape": "dot"}, {"color": "#97c2fc", "id": "tgj", "label": "tgj", "shape": "dot"}, {"color": "#97c2fc", "id": "fcp", "label": "fcp", "shape": "dot"}, {"color": "#97c2fc", "id": "kkf", "label": "kkf", "shape": "dot"}, {"color": "#97c2fc", "id": "mwp", "label": "mwp", "shape": "dot"}, {"color": "#97c2fc", "id": "z38", "label": "z38", "shape": "dot"}, {"color": "#97c2fc", "id": "nfs", "label": "nfs", "shape": "dot"}, {"color": "#97c2fc", "id": "z08", "label": "z08", "shape": "dot"}, {"color": "#97c2fc", "id": "y40", "label": "y40", "shape": "dot"}, {"color": "#97c2fc", "id": "x40", "label": "x40", "shape": "dot"}, {"color": "#97c2fc", "id": "fts", "label": "fts", "shape": "dot"}, {"color": "#97c2fc", "id": "x27", "label": "x27", "shape": "dot"}, {"color": "#97c2fc", "id": "y27", "label": "y27", "shape": "dot"}, {"color": "#97c2fc", "id": "vvc", "label": "vvc", "shape": "dot"}, {"color": "#97c2fc", "id": "x18", "label": "x18", "shape": "dot"}, {"color": "#97c2fc", "id": "y18", "label": "y18", "shape": "dot"}, {"color": "#97c2fc", "id": "ksj", "label": "ksj", "shape": "dot"}, {"color": "#97c2fc", "id": "pwm", "label": "pwm", "shape": "dot"}, {"color": "#97c2fc", "id": "cwd", "label": "cwd", "shape": "dot"}, {"color": "#97c2fc", "id": "z10", "label": "z10", "shape": "dot"}, {"color": "#97c2fc", "id": "bqd", "label": "bqd", "shape": "dot"}, {"color": "#97c2fc", "id": "fns", "label": "fns", "shape": "dot"}, {"color": "#97c2fc", "id": "bwp", "label": "bwp", "shape": "dot"}, {"color": "#97c2fc", "id": "kjh", "label": "kjh", "shape": "dot"}, {"color": "#97c2fc", "id": "kkc", "label": "kkc", "shape": "dot"}, {"color": "#97c2fc", "id": "z01", "label": "z01", "shape": "dot"}, {"color": "#97c2fc", "id": "ncw", "label": "ncw", "shape": "dot"}, {"color": "#97c2fc", "id": "btr", "label": "btr", "shape": "dot"}, {"color": "#97c2fc", "id": "z07", "label": "z07", "shape": "dot"}, {"color": "#97c2fc", "id": "krw", "label": "krw", "shape": "dot"}, {"color": "#97c2fc", "id": "wnm", "label": "wnm", "shape": "dot"}, {"color": "#97c2fc", "id": "njt", "label": "njt", "shape": "dot"}, {"color": "#97c2fc", "id": "x33", "label": "x33", "shape": "dot"}, {"color": "#97c2fc", "id": "y33", "label": "y33", "shape": "dot"}, {"color": "#97c2fc", "id": "ffv", "label": "ffv", "shape": "dot"}, {"color": "#97c2fc", "id": "qsg", "label": "qsg", "shape": "dot"}, {"color": "#97c2fc", "id": "z29", "label": "z29", "shape": "dot"}, {"color": "#97c2fc", "id": "fvf", "label": "fvf", "shape": "dot"}, {"color": "#97c2fc", "id": "crb", "label": "crb", "shape": "dot"}, {"color": "#97c2fc", "id": "bdk", "label": "bdk", "shape": "dot"}, {"color": "#97c2fc", "id": "rsm", "label": "rsm", "shape": "dot"}, {"color": "#97c2fc", "id": "npk", "label": "npk", "shape": "dot"}, {"color": "#97c2fc", "id": "std", "label": "std", "shape": "dot"}, {"color": "#97c2fc", "id": "qnr", "label": "qnr", "shape": "dot"}, {"color": "#97c2fc", "id": "mpn", "label": "mpn", "shape": "dot"}, {"color": "#97c2fc", "id": "qth", "label": "qth", "shape": "dot"}, {"color": "#97c2fc", "id": "y14", "label": "y14", "shape": "dot"}, {"color": "#97c2fc", "id": "x14", "label": "x14", "shape": "dot"}, {"color": "#97c2fc", "id": "bvm", "label": "bvm", "shape": "dot"}, {"color": "#97c2fc", "id": "y39", "label": "y39", "shape": "dot"}, {"color": "#97c2fc", "id": "x39", "label": "x39", "shape": "dot"}, {"color": "#97c2fc", "id": "kjv", "label": "kjv", "shape": "dot"}, {"color": "#97c2fc", "id": "z06", "label": "z06", "shape": "dot"}, {"color": "#97c2fc", "id": "bgk", "label": "bgk", "shape": "dot"}, {"color": "#97c2fc", "id": "fdc", "label": "fdc", "shape": "dot"}, {"color": "#97c2fc", "id": "x35", "label": "x35", "shape": "dot"}, {"color": "#97c2fc", "id": "y35", "label": "y35", "shape": "dot"}, {"color": "#97c2fc", "id": "pbr", "label": "pbr", "shape": "dot"}, {"color": "#97c2fc", "id": "y11", "label": "y11", "shape": "dot"}, {"color": "#97c2fc", "id": "x11", "label": "x11", "shape": "dot"}, {"color": "#97c2fc", "id": "jhw", "label": "jhw", "shape": "dot"}, {"color": "#97c2fc", "id": "hgw", "label": "hgw", "shape": "dot"}, {"color": "#97c2fc", "id": "jjg", "label": "jjg", "shape": "dot"}, {"color": "#97c2fc", "id": "qph", "label": "qph", "shape": "dot"}, {"color": "#97c2fc", "id": "hkn", "label": "hkn", "shape": "dot"}, {"color": "#97c2fc", "id": "tmf", "label": "tmf", "shape": "dot"}, {"color": "#97c2fc", "id": "vfn", "label": "vfn", "shape": "dot"}, {"color": "#97c2fc", "id": "x32", "label": "x32", "shape": "dot"}, {"color": "#97c2fc", "id": "y32", "label": "y32", "shape": "dot"}, {"color": "#97c2fc", "id": "wsv", "label": "wsv", "shape": "dot"}, {"color": "#97c2fc", "id": "fhv", "label": "fhv", "shape": "dot"}, {"color": "#97c2fc", "id": "rrh", "label": "rrh", "shape": "dot"}, {"color": "#97c2fc", "id": "nwf", "label": "nwf", "shape": "dot"}, {"color": "#97c2fc", "id": "bjh", "label": "bjh", "shape": "dot"}, {"color": "#97c2fc", "id": "y12", "label": "y12", "shape": "dot"}, {"color": "#97c2fc", "id": "x12", "label": "x12", "shape": "dot"}, {"color": "#97c2fc", "id": "z11", "label": "z11", "shape": "dot"}, {"color": "#97c2fc", "id": "mts", "label": "mts", "shape": "dot"}, {"color": "#97c2fc", "id": "dks", "label": "dks", "shape": "dot"}, {"color": "#97c2fc", "id": "x17", "label": "x17", "shape": "dot"}, {"color": "#97c2fc", "id": "y17", "label": "y17", "shape": "dot"}, {"color": "#97c2fc", "id": "tfc", "label": "tfc", "shape": "dot"}, {"color": "#97c2fc", "id": "hmc", "label": "hmc", "shape": "dot"}, {"color": "#97c2fc", "id": "rdg", "label": "rdg", "shape": "dot"}, {"color": "#97c2fc", "id": "dqs", "label": "dqs", "shape": "dot"}, {"color": "#97c2fc", "id": "nmr", "label": "nmr", "shape": "dot"}, {"color": "#97c2fc", "id": "x03", "label": "x03", "shape": "dot"}, {"color": "#97c2fc", "id": "y03", "label": "y03", "shape": "dot"}, {"color": "#97c2fc", "id": "dnk", "label": "dnk", "shape": "dot"}, {"color": "#97c2fc", "id": "x06", "label": "x06", "shape": "dot"}, {"color": "#97c2fc", "id": "y06", "label": "y06", "shape": "dot"}, {"color": "#97c2fc", "id": "wgj", "label": "wgj", "shape": "dot"}, {"color": "#97c2fc", "id": "qrk", "label": "qrk", "shape": "dot"}, {"color": "#97c2fc", "id": "fgm", "label": "fgm", "shape": "dot"}, {"color": "#97c2fc", "id": "vfw", "label": "vfw", "shape": "dot"}, {"color": "#97c2fc", "id": "nqq", "label": "nqq", "shape": "dot"}, {"color": "#97c2fc", "id": "knp", "label": "knp", "shape": "dot"}, {"color": "#97c2fc", "id": "x19", "label": "x19", "shape": "dot"}, {"color": "#97c2fc", "id": "y19", "label": "y19", "shape": "dot"}, {"color": "#97c2fc", "id": "sgm", "label": "sgm", "shape": "dot"}, {"color": "#97c2fc", "id": "y36", "label": "y36", "shape": "dot"}, {"color": "#97c2fc", "id": "x36", "label": "x36", "shape": "dot"}, {"color": "#97c2fc", "id": "msh", "label": "msh", "shape": "dot"}, {"color": "#97c2fc", "id": "z45", "label": "z45", "shape": "dot"}, {"color": "#97c2fc", "id": "qwg", "label": "qwg", "shape": "dot"}, {"color": "#97c2fc", "id": "wvj", "label": "wvj", "shape": "dot"}, {"color": "#97c2fc", "id": "qhq", "label": "qhq", "shape": "dot"}, {"color": "#97c2fc", "id": "y15", "label": "y15", "shape": "dot"}, {"color": "#97c2fc", "id": "x15", "label": "x15", "shape": "dot"}, {"color": "#97c2fc", "id": "qff", "label": "qff", "shape": "dot"}, {"color": "#97c2fc", "id": "cmv", "label": "cmv", "shape": "dot"}, {"color": "#97c2fc", "id": "snw", "label": "snw", "shape": "dot"}, {"color": "#97c2fc", "id": "x42", "label": "x42", "shape": "dot"}, {"color": "#97c2fc", "id": "y42", "label": "y42", "shape": "dot"}, {"color": "#97c2fc", "id": "qcn", "label": "qcn", "shape": "dot"}, {"color": "#97c2fc", "id": "kbj", "label": "kbj", "shape": "dot"}, {"color": "#97c2fc", "id": "x29", "label": "x29", "shape": "dot"}, {"color": "#97c2fc", "id": "y29", "label": "y29", "shape": "dot"}, {"color": "#97c2fc", "id": "qmm", "label": "qmm", "shape": "dot"}, {"color": "#97c2fc", "id": "y04", "label": "y04", "shape": "dot"}, {"color": "#97c2fc", "id": "x04", "label": "x04", "shape": "dot"}, {"color": "#97c2fc", "id": "qtk", "label": "qtk", "shape": "dot"}, {"color": "#97c2fc", "id": "qwc", "label": "qwc", "shape": "dot"}, {"color": "#97c2fc", "id": "fqb", "label": "fqb", "shape": "dot"}, {"color": "#97c2fc", "id": "pbw", "label": "pbw", "shape": "dot"}, {"color": "#97c2fc", "id": "rmj", "label": "rmj", "shape": "dot"}, {"color": "#97c2fc", "id": "gmv", "label": "gmv", "shape": "dot"}, {"color": "#97c2fc", "id": "dhk", "label": "dhk", "shape": "dot"}, {"color": "#97c2fc", "id": "ntq", "label": "ntq", "shape": "dot"}, {"color": "#97c2fc", "id": "knj", "label": "knj", "shape": "dot"}, {"color": "#97c2fc", "id": "x43", "label": "x43", "shape": "dot"}, {"color": "#97c2fc", "id": "y43", "label": "y43", "shape": "dot"}, {"color": "#97c2fc", "id": "scr", "label": "scr", "shape": "dot"}, {"color": "#97c2fc", "id": "x23", "label": "x23", "shape": "dot"}, {"color": "#97c2fc", "id": "y23", "label": "y23", "shape": "dot"}, {"color": "#97c2fc", "id": "frg", "label": "frg", "shape": "dot"}, {"color": "#97c2fc", "id": "y24", "label": "y24", "shape": "dot"}, {"color": "#97c2fc", "id": "x24", "label": "x24", "shape": "dot"}, {"color": "#97c2fc", "id": "vjw", "label": "vjw", "shape": "dot"}, {"color": "#97c2fc", "id": "y13", "label": "y13", "shape": "dot"}, {"color": "#97c2fc", "id": "x13", "label": "x13", "shape": "dot"}, {"color": "#97c2fc", "id": "kfr", "label": "kfr", "shape": "dot"}, {"color": "#97c2fc", "id": "wjq", "label": "wjq", "shape": "dot"}, {"color": "#97c2fc", "id": "rnk", "label": "rnk", "shape": "dot"}, {"color": "#97c2fc", "id": "mng", "label": "mng", "shape": "dot"}, {"color": "#97c2fc", "id": "msr", "label": "msr", "shape": "dot"}, {"color": "#97c2fc", "id": "z42", "label": "z42", "shape": "dot"}, {"color": "#97c2fc", "id": "jrk", "label": "jrk", "shape": "dot"}, {"color": "#97c2fc", "id": "wcj", "label": "wcj", "shape": "dot"}, {"color": "#97c2fc", "id": "kgr", "label": "kgr", "shape": "dot"}, {"color": "#97c2fc", "id": "kdt", "label": "kdt", "shape": "dot"}, {"color": "#97c2fc", "id": "z28", "label": "z28", "shape": "dot"}, {"color": "#97c2fc", "id": "kqt", "label": "kqt", "shape": "dot"}, {"color": "#97c2fc", "id": "wbk", "label": "wbk", "shape": "dot"}, {"color": "#97c2fc", "id": "hdt", "label": "hdt", "shape": "dot"}, {"color": "#97c2fc", "id": "nws", "label": "nws", "shape": "dot"}, {"color": "#97c2fc", "id": "njp", "label": "njp", "shape": "dot"}, {"color": "#97c2fc", "id": "z23", "label": "z23", "shape": "dot"}, {"color": "#97c2fc", "id": "y21", "label": "y21", "shape": "dot"}, {"color": "#97c2fc", "id": "x21", "label": "x21", "shape": "dot"}, {"color": "#97c2fc", "id": "jkg", "label": "jkg", "shape": "dot"}, {"color": "#97c2fc", "id": "z15", "label": "z15", "shape": "dot"}, {"color": "#97c2fc", "id": "pkh", "label": "pkh", "shape": "dot"}, {"color": "#97c2fc", "id": "hqn", "label": "hqn", "shape": "dot"}, {"color": "#97c2fc", "id": "gtq", "label": "gtq", "shape": "dot"}, {"color": "#97c2fc", "id": "dnf", "label": "dnf", "shape": "dot"}, {"color": "#97c2fc", "id": "drf", "label": "drf", "shape": "dot"}, {"color": "#97c2fc", "id": "mtd", "label": "mtd", "shape": "dot"}, {"color": "#97c2fc", "id": "z19", "label": "z19", "shape": "dot"}, {"color": "#97c2fc", "id": "z43", "label": "z43", "shape": "dot"}, {"color": "#97c2fc", "id": "bmw", "label": "bmw", "shape": "dot"}, {"color": "#97c2fc", "id": "dwn", "label": "dwn", "shape": "dot"}, {"color": "#97c2fc", "id": "z26", "label": "z26", "shape": "dot"}, {"color": "#97c2fc", "id": "fjp", "label": "fjp", "shape": "dot"}, {"color": "#97c2fc", "id": "jvk", "label": "jvk", "shape": "dot"}, {"color": "#97c2fc", "id": "jpt", "label": "jpt", "shape": "dot"}, {"color": "#97c2fc", "id": "nnt", "label": "nnt", "shape": "dot"}, {"color": "#97c2fc", "id": "y38", "label": "y38", "shape": "dot"}, {"color": "#97c2fc", "id": "x38", "label": "x38", "shape": "dot"}, {"color": "#97c2fc", "id": "dqg", "label": "dqg", "shape": "dot"}, {"color": "#97c2fc", "id": "z39", "label": "z39", "shape": "dot"}, {"color": "#97c2fc", "id": "x10", "label": "x10", "shape": "dot"}, {"color": "#97c2fc", "id": "y10", "label": "y10", "shape": "dot"}, {"color": "#97c2fc", "id": "gdv", "label": "gdv", "shape": "dot"}, {"color": "#97c2fc", "id": "mnf", "label": "mnf", "shape": "dot"}, {"color": "#97c2fc", "id": "tcr", "label": "tcr", "shape": "dot"}, {"color": "#97c2fc", "id": "nvs", "label": "nvs", "shape": "dot"}, {"color": "#97c2fc", "id": "z41", "label": "z41", "shape": "dot"}, {"color": "#97c2fc", "id": "z09", "label": "z09", "shape": "dot"}, {"color": "#97c2fc", "id": "fwm", "label": "fwm", "shape": "dot"}, {"color": "#97c2fc", "id": "wbw", "label": "wbw", "shape": "dot"}, {"color": "#97c2fc", "id": "dbr", "label": "dbr", "shape": "dot"}, {"color": "#97c2fc", "id": "wcp", "label": "wcp", "shape": "dot"}, {"color": "#97c2fc", "id": "x31", "label": "x31", "shape": "dot"}, {"color": "#97c2fc", "id": "y31", "label": "y31", "shape": "dot"}, {"color": "#97c2fc", "id": "rpp", "label": "rpp", "shape": "dot"}, {"color": "#97c2fc", "id": "y30", "label": "y30", "shape": "dot"}, {"color": "#97c2fc", "id": "x30", "label": "x30", "shape": "dot"}, {"color": "#97c2fc", "id": "rvp", "label": "rvp", "shape": "dot"}, {"color": "#97c2fc", "id": "x28", "label": "x28", "shape": "dot"}, {"color": "#97c2fc", "id": "y28", "label": "y28", "shape": "dot"}, {"color": "#97c2fc", "id": "y22", "label": "y22", "shape": "dot"}, {"color": "#97c2fc", "id": "x22", "label": "x22", "shape": "dot"}, {"color": "#97c2fc", "id": "z12", "label": "z12", "shape": "dot"}, {"color": "#97c2fc", "id": "jjv", "label": "jjv", "shape": "dot"}, {"color": "#97c2fc", "id": "gwk", "label": "gwk", "shape": "dot"}, {"color": "#97c2fc", "id": "rwb", "label": "rwb", "shape": "dot"}, {"color": "#97c2fc", "id": "z22", "label": "z22", "shape": "dot"}, {"color": "#97c2fc", "id": "y00", "label": "y00", "shape": "dot"}, {"color": "#97c2fc", "id": "x00", "label": "x00", "shape": "dot"}, {"color": "#97c2fc", "id": "z00", "label": "z00", "shape": "dot"}, {"color": "#97c2fc", "id": "dmf", "label": "dmf", "shape": "dot"}, {"color": "#97c2fc", "id": "z20", "label": "z20", "shape": "dot"}, {"color": "#97c2fc", "id": "wqs", "label": "wqs", "shape": "dot"}, {"color": "#97c2fc", "id": "kpd", "label": "kpd", "shape": "dot"}, {"color": "#97c2fc", "id": "btb", "label": "btb", "shape": "dot"}, {"color": "#97c2fc", "id": "mhj", "label": "mhj", "shape": "dot"}, {"color": "#97c2fc", "id": "z03", "label": "z03", "shape": "dot"}, {"color": "#97c2fc", "id": "hvq", "label": "hvq", "shape": "dot"}, {"color": "#97c2fc", "id": "y02", "label": "y02", "shape": "dot"}, {"color": "#97c2fc", "id": "x02", "label": "x02", "shape": "dot"}, {"color": "#97c2fc", "id": "hqj", "label": "hqj", "shape": "dot"}, {"color": "#97c2fc", "id": "z17", "label": "z17", "shape": "dot"}, {"color": "#97c2fc", "id": "z30", "label": "z30", "shape": "dot"}, {"color": "#97c2fc", "id": "npn", "label": "npn", "shape": "dot"}, {"color": "#97c2fc", "id": "gjh", "label": "gjh", "shape": "dot"}, {"color": "#97c2fc", "id": "qnk", "label": "qnk", "shape": "dot"}, {"color": "#97c2fc", "id": "z14", "label": "z14", "shape": "dot"}, {"color": "#97c2fc", "id": "kbw", "label": "kbw", "shape": "dot"}, {"color": "#97c2fc", "id": "wnf", "label": "wnf", "shape": "dot"}, {"color": "#97c2fc", "id": "z16", "label": "z16", "shape": "dot"}, {"color": "#97c2fc", "id": "z40", "label": "z40", "shape": "dot"}, {"color": "#97c2fc", "id": "y16", "label": "y16", "shape": "dot"}, {"color": "#97c2fc", "id": "x16", "label": "x16", "shape": "dot"}, {"color": "#97c2fc", "id": "ctj", "label": "ctj", "shape": "dot"}, {"color": "#97c2fc", "id": "z18", "label": "z18", "shape": "dot"}, {"color": "#97c2fc", "id": "ttr", "label": "ttr", "shape": "dot"}, {"color": "#97c2fc", "id": "y01", "label": "y01", "shape": "dot"}, {"color": "#97c2fc", "id": "x01", "label": "x01", "shape": "dot"}, {"color": "#97c2fc", "id": "z37", "label": "z37", "shape": "dot"}, {"color": "#97c2fc", "id": "qwd", "label": "qwd", "shape": "dot"}, {"color": "#97c2fc", "id": "swm", "label": "swm", "shape": "dot"}, {"color": "#97c2fc", "id": "y26", "label": "y26", "shape": "dot"}, {"color": "#97c2fc", "id": "x26", "label": "x26", "shape": "dot"}, {"color": "#97c2fc", "id": "z33", "label": "z33", "shape": "dot"}, {"color": "#97c2fc", "id": "nhb", "label": "nhb", "shape": "dot"}, {"color": "#97c2fc", "id": "z25", "label": "z25", "shape": "dot"}, {"color": "#97c2fc", "id": "tpp", "label": "tpp", "shape": "dot"}, {"color": "#97c2fc", "id": "z05", "label": "z05", "shape": "dot"}, {"color": "#97c2fc", "id": "jpd", "label": "jpd", "shape": "dot"}, {"color": "#97c2fc", "id": "z31", "label": "z31", "shape": "dot"}, {"color": "#97c2fc", "id": "z02", "label": "z02", "shape": "dot"}, {"color": "#97c2fc", "id": "gfg", "label": "gfg", "shape": "dot"}, {"color": "#97c2fc", "id": "y25", "label": "y25", "shape": "dot"}, {"color": "#97c2fc", "id": "x25", "label": "x25", "shape": "dot"}, {"color": "#97c2fc", "id": "z24", "label": "z24", "shape": "dot"}, {"color": "#97c2fc", "id": "z35", "label": "z35", "shape": "dot"}, {"color": "#97c2fc", "id": "z34", "label": "z34", "shape": "dot"}, {"color": "#97c2fc", "id": "z21", "label": "z21", "shape": "dot"}]);
+                  edges = new vis.DataSet([{"from": "ktr", "to": "z27"}, {"from": "cpc", "to": "z27"}, {"from": "hbk", "to": "z13"}, {"from": "fbg", "to": "z13"}, {"from": "rbm", "to": "z36"}, {"from": "tjp", "to": "z36"}, {"from": "y44", "to": "njr"}, {"from": "x44", "to": "njr"}, {"from": "x08", "to": "cfd"}, {"from": "y08", "to": "cfd"}, {"from": "gwg", "to": "z04"}, {"from": "ggg", "to": "z04"}, {"from": "y09", "to": "dsc"}, {"from": "x09", "to": "dsc"}, {"from": "ctp", "to": "msw"}, {"from": "rjr", "to": "msw"}, {"from": "hwk", "to": "fnt"}, {"from": "jsw", "to": "fnt"}, {"from": "x41", "to": "qvg"}, {"from": "y41", "to": "qvg"}, {"from": "bqj", "to": "tsk"}, {"from": "dqj", "to": "tsk"}, {"from": "y37", "to": "stv"}, {"from": "x37", "to": "stv"}, {"from": "njr", "to": "z44"}, {"from": "tkm", "to": "z44"}, {"from": "x34", "to": "gjj"}, {"from": "y34", "to": "gjj"}, {"from": "x07", "to": "sqm"}, {"from": "y07", "to": "sqm"}, {"from": "x20", "to": "ckr"}, {"from": "y20", "to": "ckr"}, {"from": "x05", "to": "skf"}, {"from": "y05", "to": "skf"}, {"from": "hrn", "to": "z32"}, {"from": "bfj", "to": "z32"}, {"from": "tkm", "to": "rfc"}, {"from": "njr", "to": "rfc"}, {"from": "tgj", "to": "kkf"}, {"from": "fcp", "to": "kkf"}, {"from": "tsk", "to": "z38"}, {"from": "mwp", "to": "z38"}, {"from": "nfs", "to": "z08"}, {"from": "cfd", "to": "z08"}, {"from": "y40", "to": "fts"}, {"from": "x40", "to": "fts"}, {"from": "x27", "to": "vvc"}, {"from": "y27", "to": "vvc"}, {"from": "x18", "to": "ksj"}, {"from": "y18", "to": "ksj"}, {"from": "pwm", "to": "z10"}, {"from": "cwd", "to": "z10"}, {"from": "bqd", "to": "bwp"}, {"from": "fns", "to": "bwp"}, {"from": "kjh", "to": "z01"}, {"from": "kkc", "to": "z01"}, {"from": "ncw", "to": "z07"}, {"from": "btr", "to": "z07"}, {"from": "krw", "to": "njt"}, {"from": "wnm", "to": "njt"}, {"from": "x33", "to": "ffv"}, {"from": "y33", "to": "ffv"}, {"from": "qsg", "to": "z29"}, {"from": "msw", "to": "z29"}, {"from": "fvf", "to": "bdk"}, {"from": "crb", "to": "bdk"}, {"from": "rsm", "to": "std"}, {"from": "npk", "to": "std"}, {"from": "qnr", "to": "qth"}, {"from": "mpn", "to": "qth"}, {"from": "y14", "to": "bvm"}, {"from": "x14", "to": "bvm"}, {"from": "y39", "to": "kjv"}, {"from": "x39", "to": "kjv"}, {"from": "qnr", "to": "z06"}, {"from": "mpn", "to": "z06"}, {"from": "bgk", "to": "hrn"}, {"from": "fdc", "to": "hrn"}, {"from": "x35", "to": "pbr"}, {"from": "y35", "to": "pbr"}, {"from": "y11", "to": "hwk"}, {"from": "x11", "to": "hwk"}, {"from": "mwp", "to": "jhw"}, {"from": "tsk", "to": "jhw"}, {"from": "hgw", "to": "qph"}, {"from": "jjg", "to": "qph"}, {"from": "hkn", "to": "vfn"}, {"from": "tmf", "to": "vfn"}, {"from": "x32", "to": "wsv"}, {"from": "y32", "to": "wsv"}, {"from": "fhv", "to": "nwf"}, {"from": "rrh", "to": "nwf"}, {"from": "bjh", "to": "dqj"}, {"from": "stv", "to": "dqj"}, {"from": "y12", "to": "wnm"}, {"from": "x12", "to": "wnm"}, {"from": "y27", "to": "cpc"}, {"from": "x27", "to": "cpc"}, {"from": "jsw", "to": "z11"}, {"from": "hwk", "to": "z11"}, {"from": "mts", "to": "dks"}, {"from": "bvm", "to": "dks"}, {"from": "x17", "to": "tfc"}, {"from": "y17", "to": "tfc"}, {"from": "hmc", "to": "tmf"}, {"from": "gjj", "to": "tmf"}, {"from": "rdg", "to": "nmr"}, {"from": "dqs", "to": "nmr"}, {"from": "x03", "to": "dnk"}, {"from": "y03", "to": "dnk"}, {"from": "x06", "to": "wgj"}, {"from": "y06", "to": "wgj"}, {"from": "fts", "to": "fgm"}, {"from": "qrk", "to": "fgm"}, {"from": "vfw", "to": "bjh"}, {"from": "nqq", "to": "bjh"}, {"from": "knp", "to": "hmc"}, {"from": "ffv", "to": "hmc"}, {"from": "x19", "to": "sgm"}, {"from": "y19", "to": "sgm"}, {"from": "y36", "to": "vfw"}, {"from": "x36", "to": "vfw"}, {"from": "msh", "to": "z45"}, {"from": "rfc", "to": "z45"}, {"from": "qwg", "to": "qhq"}, {"from": "wvj", "to": "qhq"}, {"from": "y15", "to": "qff"}, {"from": "x15", "to": "qff"}, {"from": "wvj", "to": "cmv"}, {"from": "qwg", "to": "cmv"}, {"from": "x33", "to": "snw"}, {"from": "y33", "to": "snw"}, {"from": "x42", "to": "qcn"}, {"from": "y42", "to": "qcn"}, {"from": "y15", "to": "kbj"}, {"from": "x15", "to": "kbj"}, {"from": "x29", "to": "qsg"}, {"from": "y29", "to": "qsg"}, {"from": "x06", "to": "mpn"}, {"from": "y06", "to": "mpn"}, {"from": "qmm", "to": "mts"}, {"from": "std", "to": "mts"}, {"from": "y04", "to": "ggg"}, {"from": "x04", "to": "ggg"}, {"from": "qtk", "to": "jsw"}, {"from": "qwc", "to": "jsw"}, {"from": "y05", "to": "fqb"}, {"from": "x05", "to": "fqb"}, {"from": "kkf", "to": "rmj"}, {"from": "pbw", "to": "rmj"}, {"from": "y35", "to": "gmv"}, {"from": "x35", "to": "gmv"}, {"from": "dhk", "to": "knj"}, {"from": "ntq", "to": "knj"}, {"from": "y29", "to": "dhk"}, {"from": "x29", "to": "dhk"}, {"from": "x43", "to": "scr"}, {"from": "y43", "to": "scr"}, {"from": "x23", "to": "frg"}, {"from": "y23", "to": "frg"}, {"from": "y24", "to": "vjw"}, {"from": "x24", "to": "vjw"}, {"from": "y13", "to": "rsm"}, {"from": "x13", "to": "rsm"}, {"from": "kfr", "to": "gwg"}, {"from": "wjq", "to": "gwg"}, {"from": "rnk", "to": "mng"}, {"from": "fgm", "to": "mng"}, {"from": "hbk", "to": "npk"}, {"from": "fbg", "to": "npk"}, {"from": "qcn", "to": "z42"}, {"from": "msr", "to": "z42"}, {"from": "fqb", "to": "qnr"}, {"from": "jrk", "to": "qnr"}, {"from": "dnk", "to": "wjq"}, {"from": "wcj", "to": "wjq"}, {"from": "kgr", "to": "z28"}, {"from": "kdt", "to": "z28"}, {"from": "nmr", "to": "bgk"}, {"from": "kqt", "to": "bgk"}, {"from": "wbk", "to": "nws"}, {"from": "hdt", "to": "nws"}, {"from": "bdk", "to": "fcp"}, {"from": "njp", "to": "fcp"}, {"from": "kkf", "to": "z23"}, {"from": "pbw", "to": "z23"}, {"from": "y21", "to": "jkg"}, {"from": "x21", "to": "jkg"}, {"from": "qff", "to": "z15"}, {"from": "dks", "to": "z15"}, {"from": "y17", "to": "wvj"}, {"from": "x17", "to": "wvj"}, {"from": "x44", "to": "msh"}, {"from": "y44", "to": "msh"}, {"from": "pkh", "to": "gtq"}, {"from": "hqn", "to": "gtq"}, {"from": "qcn", "to": "dnf"}, {"from": "msr", "to": "dnf"}, {"from": "drf", "to": "z19"}, {"from": "mtd", "to": "z19"}, {"from": "y40", "to": "rnk"}, {"from": "x40", "to": "rnk"}, {"from": "hdt", "to": "z43"}, {"from": "wbk", "to": "z43"}, {"from": "bmw", "to": "z26"}, {"from": "dwn", "to": "z26"}, {"from": "wgj", "to": "ncw"}, {"from": "qth", "to": "ncw"}, {"from": "njt", "to": "fbg"}, {"from": "fjp", "to": "fbg"}, {"from": "jvk", "to": "nnt"}, {"from": "jpt", "to": "nnt"}, {"from": "y32", "to": "bfj"}, {"from": "x32", "to": "bfj"}, {"from": "y38", "to": "mwp"}, {"from": "x38", "to": "mwp"}, {"from": "x08", "to": "fhv"}, {"from": "y08", "to": "fhv"}, {"from": "kjv", "to": "z39"}, {"from": "dqg", "to": "z39"}, {"from": "x10", "to": "qwc"}, {"from": "y10", "to": "qwc"}, {"from": "gdv", "to": "dwn"}, {"from": "mnf", "to": "dwn"}, {"from": "gtq", "to": "tcr"}, {"from": "vjw", "to": "tcr"}, {"from": "nvs", "to": "wcj"}, {"from": "nnt", "to": "wcj"}, {"from": "y14", "to": "qmm"}, {"from": "x14", "to": "qmm"}, {"from": "cfd", "to": "rrh"}, {"from": "nfs", "to": "rrh"}, {"from": "qvg", "to": "z41"}, {"from": "mng", "to": "z41"}, {"from": "dsc", "to": "z09"}, {"from": "nwf", "to": "z09"}, {"from": "cmv", "to": "wbw"}, {"from": "fwm", "to": "wbw"}, {"from": "gmv", "to": "dbr"}, {"from": "vfn", "to": "dbr"}, {"from": "mng", "to": "wcp"}, {"from": "qvg", "to": "wcp"}, {"from": "x31", "to": "fdc"}, {"from": "y31", "to": "fdc"}, {"from": "cwd", "to": "qtk"}, {"from": "pwm", "to": "qtk"}, {"from": "x41", "to": "rpp"}, {"from": "y41", "to": "rpp"}, {"from": "y30", "to": "rvp"}, {"from": "x30", "to": "rvp"}, {"from": "x28", "to": "kdt"}, {"from": "y28", "to": "kdt"}, {"from": "y22", "to": "tgj"}, {"from": "x22", "to": "tgj"}, {"from": "krw", "to": "z12"}, {"from": "wnm", "to": "z12"}, {"from": "dbr", "to": "tjp"}, {"from": "pbr", "to": "tjp"}, {"from": "kjh", "to": "jjv"}, {"from": "kkc", "to": "jjv"}, {"from": "gwk", "to": "qrk"}, {"from": "rwb", "to": "qrk"}, {"from": "bdk", "to": "z22"}, {"from": "njp", "to": "z22"}, {"from": "wcp", "to": "msr"}, {"from": "rpp", "to": "msr"}, {"from": "y00", "to": "z00"}, {"from": "x00", "to": "z00"}, {"from": "kdt", "to": "ctp"}, {"from": "kgr", "to": "ctp"}, {"from": "dmf", "to": "z20"}, {"from": "ckr", "to": "z20"}, {"from": "wsv", "to": "kpd"}, {"from": "wqs", "to": "kpd"}, {"from": "x21", "to": "fvf"}, {"from": "y21", "to": "fvf"}, {"from": "kpd", "to": "knp"}, {"from": "snw", "to": "knp"}, {"from": "y38", "to": "btb"}, {"from": "x38", "to": "btb"}, {"from": "mhj", "to": "dmf"}, {"from": "sgm", "to": "dmf"}, {"from": "y20", "to": "bqd"}, {"from": "x20", "to": "bqd"}, {"from": "wcj", "to": "z03"}, {"from": "dnk", "to": "z03"}, {"from": "y12", "to": "fjp"}, {"from": "x12", "to": "fjp"}, {"from": "ktr", "to": "hvq"}, {"from": "cpc", "to": "hvq"}, {"from": "ckr", "to": "fns"}, {"from": "dmf", "to": "fns"}, {"from": "y02", "to": "jvk"}, {"from": "x02", "to": "jvk"}, {"from": "dnf", "to": "hdt"}, {"from": "hqj", "to": "hdt"}, {"from": "x13", "to": "hbk"}, {"from": "y13", "to": "hbk"}, {"from": "x02", "to": "nvs"}, {"from": "y02", "to": "nvs"}, {"from": "x00", "to": "kkc"}, {"from": "y00", "to": "kkc"}, {"from": "skf", "to": "jrk"}, {"from": "qph", "to": "jrk"}, {"from": "nws", "to": "tkm"}, {"from": "scr", "to": "tkm"}, {"from": "tfc", "to": "z17"}, {"from": "qhq", "to": "z17"}, {"from": "x30", "to": "z30"}, {"from": "y30", "to": "z30"}, {"from": "npn", "to": "jpt"}, {"from": "jjv", "to": "jpt"}, {"from": "kjv", "to": "gwk"}, {"from": "dqg", "to": "gwk"}, {"from": "y03", "to": "kfr"}, {"from": "x03", "to": "kfr"}, {"from": "jkg", "to": "crb"}, {"from": "bwp", "to": "crb"}, {"from": "y18", "to": "fwm"}, {"from": "x18", "to": "fwm"}, {"from": "bmw", "to": "gjh"}, {"from": "dwn", "to": "gjh"}, {"from": "sqm", "to": "nfs"}, {"from": "qnk", "to": "nfs"}, {"from": "x10", "to": "pwm"}, {"from": "y10", "to": "pwm"}, {"from": "y37", "to": "bqj"}, {"from": "x37", "to": "bqj"}, {"from": "ksj", "to": "mtd"}, {"from": "wbw", "to": "mtd"}, {"from": "std", "to": "z14"}, {"from": "qmm", "to": "z14"}, {"from": "kbw", "to": "z16"}, {"from": "wnf", "to": "z16"}, {"from": "x28", "to": "rjr"}, {"from": "y28", "to": "rjr"}, {"from": "y07", "to": "btr"}, {"from": "x07", "to": "btr"}, {"from": "fts", "to": "z40"}, {"from": "qrk", "to": "z40"}, {"from": "y16", "to": "wnf"}, {"from": "x16", "to": "wnf"}, {"from": "dsc", "to": "ctj"}, {"from": "nwf", "to": "ctj"}, {"from": "mtd", "to": "mhj"}, {"from": "drf", "to": "mhj"}, {"from": "hrn", "to": "wqs"}, {"from": "bfj", "to": "wqs"}, {"from": "cmv", "to": "z18"}, {"from": "fwm", "to": "z18"}, {"from": "qff", "to": "ttr"}, {"from": "dks", "to": "ttr"}, {"from": "y01", "to": "kjh"}, {"from": "x01", "to": "kjh"}, {"from": "bjh", "to": "z37"}, {"from": "stv", "to": "z37"}, {"from": "qwd", "to": "qwg"}, {"from": "swm", "to": "qwg"}, {"from": "kbj", "to": "kbw"}, {"from": "ttr", "to": "kbw"}, {"from": "y26", "to": "bmw"}, {"from": "x26", "to": "bmw"}, {"from": "x16", "to": "qwd"}, {"from": "y16", "to": "qwd"}, {"from": "x42", "to": "hqj"}, {"from": "y42", "to": "hqj"}, {"from": "kpd", "to": "z33"}, {"from": "snw", "to": "z33"}, {"from": "knj", "to": "rdg"}, {"from": "rvp", "to": "rdg"}, {"from": "x24", "to": "hqn"}, {"from": "y24", "to": "hqn"}, {"from": "nhb", "to": "z25"}, {"from": "tcr", "to": "z25"}, {"from": "ncw", "to": "qnk"}, {"from": "btr", "to": "qnk"}, {"from": "tpp", "to": "cwd"}, {"from": "ctj", "to": "cwd"}, {"from": "y39", "to": "rwb"}, {"from": "x39", "to": "rwb"}, {"from": "x31", "to": "kqt"}, {"from": "y31", "to": "kqt"}, {"from": "msw", "to": "ntq"}, {"from": "qsg", "to": "ntq"}, {"from": "frg", "to": "pkh"}, {"from": "rmj", "to": "pkh"}, {"from": "qph", "to": "z05"}, {"from": "skf", "to": "z05"}, {"from": "y09", "to": "tpp"}, {"from": "x09", "to": "tpp"}, {"from": "y01", "to": "npn"}, {"from": "x01", "to": "npn"}, {"from": "x19", "to": "drf"}, {"from": "y19", "to": "drf"}, {"from": "y36", "to": "rbm"}, {"from": "x36", "to": "rbm"}, {"from": "jpd", "to": "ktr"}, {"from": "gjh", "to": "ktr"}, {"from": "nmr", "to": "z31"}, {"from": "kqt", "to": "z31"}, {"from": "x26", "to": "jpd"}, {"from": "y26", "to": "jpd"}, {"from": "jpt", "to": "z02"}, {"from": "jvk", "to": "z02"}, {"from": "y43", "to": "wbk"}, {"from": "x43", "to": "wbk"}, {"from": "tjp", "to": "nqq"}, {"from": "rbm", "to": "nqq"}, {"from": "x11", "to": "gfg"}, {"from": "y11", "to": "gfg"}, {"from": "nhb", "to": "gdv"}, {"from": "tcr", "to": "gdv"}, {"from": "y34", "to": "hkn"}, {"from": "x34", "to": "hkn"}, {"from": "hvq", "to": "kgr"}, {"from": "vvc", "to": "kgr"}, {"from": "y25", "to": "mnf"}, {"from": "x25", "to": "mnf"}, {"from": "gwg", "to": "hgw"}, {"from": "ggg", "to": "hgw"}, {"from": "pkh", "to": "z24"}, {"from": "hqn", "to": "z24"}, {"from": "fnt", "to": "krw"}, {"from": "gfg", "to": "krw"}, {"from": "x23", "to": "pbw"}, {"from": "y23", "to": "pbw"}, {"from": "wnf", "to": "swm"}, {"from": "kbw", "to": "swm"}, {"from": "gmv", "to": "z35"}, {"from": "vfn", "to": "z35"}, {"from": "x22", "to": "njp"}, {"from": "y22", "to": "njp"}, {"from": "x25", "to": "nhb"}, {"from": "y25", "to": "nhb"}, {"from": "knj", "to": "dqs"}, {"from": "rvp", "to": "dqs"}, {"from": "gjj", "to": "z34"}, {"from": "hmc", "to": "z34"}, {"from": "btb", "to": "dqg"}, {"from": "jhw", "to": "dqg"}, {"from": "x04", "to": "jjg"}, {"from": "y04", "to": "jjg"}, {"from": "jkg", "to": "z21"}, {"from": "bwp", "to": "z21"}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+                      network.on("stabilizationProgress", function(params) {
+                          document.getElementById('loadingBar').removeAttribute("style");
+                          var maxWidth = 496;
+                          var minWidth = 20;
+                          var widthFactor = params.iterations/params.total;
+                          var width = Math.max(minWidth,maxWidth * widthFactor);
+                          document.getElementById('bar').style.width = width + 'px';
+                          document.getElementById('text').innerHTML = Math.round(widthFactor*100) + '%';
+                      });
+                      network.once("stabilizationIterationsDone", function() {
+                          document.getElementById('text').innerHTML = '100%';
+                          document.getElementById('bar').style.width = '496px';
+                          document.getElementById('loadingBar').style.opacity = 0;
+                          // really clean the dom element
+                          setTimeout(function () {document.getElementById('loadingBar').style.display = 'none';}, 500);
+                      });
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>

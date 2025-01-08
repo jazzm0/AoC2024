@@ -1,3 +1,6 @@
+from pyvis.network import Network
+
+
 def parse_input():
     wire_values = {}
     operations = []
@@ -49,7 +52,24 @@ def simulate_gates(wire_values, operations):
     return wire_values
 
 
+def plot(output: str, operations: list):
+    net = Network()
+    for operation in operations:
+        target = operation[1]
+        in1, in2 = operation[0].split()[0], operation[0].split()[2]
+        net.add_node(in1, label=in1)
+        net.add_node(in2, label=in2)
+        net.add_node(target, target)
+        net.add_edge(in1, target)
+        net.add_edge(in2, target)
+
+    net.toggle_physics(True)
+    net.show(output, notebook=False)
+
+
 wire_values, operations = parse_input()
+
+plot("24.html", operations)
 
 wire_values = simulate_gates(wire_values, operations)
 
@@ -60,3 +80,6 @@ while f"z{bit_position:02d}" in wire_values:
     bit_position += 1
 
 print(f"Output value: {output_value}")
+
+
+# problems z30, 
