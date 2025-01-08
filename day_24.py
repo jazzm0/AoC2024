@@ -37,7 +37,7 @@ def simulate_gates(wire_values, operations):
             operands = operation.split()
             op1, op2 = operands[0], operands[2]
 
-            if (op1.isdigit() or op1 in wire_values) and (op2.isdigit() or op2 in wire_values):
+            if op1 in wire_values and op2 in wire_values:
                 wire_values[output_wire] = evaluate_operation(operation, wire_values)
             else:
                 remaining_operations.append((operation, output_wire))
