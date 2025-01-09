@@ -54,12 +54,24 @@ def simulate_gates(wire_values, operations):
 
 def plot(output: str, operations: list):
     net = Network()
+    added_nodes = set()
+
     for operation in operations:
         target = operation[1]
-        in1, in2 = operation[0].split()[0], operation[0].split()[2]
-        net.add_node(in1, label=in1)
-        net.add_node(in2, label=in2)
-        net.add_node(target, target)
+        in1, gate, in2 = operation[0].split()
+
+        if in1 not in added_nodes:
+            net.add_node(in1, label=in1)
+            added_nodes.add(in1)
+
+        if in2 not in added_nodes:
+            net.add_node(in2, label=in2)
+            added_nodes.add(in2)
+
+        if target not in added_nodes:
+            net.add_node(target, label=f"{gate} {target}", shape="box")
+            added_nodes.add(target)
+
         net.add_edge(in1, target)
         net.add_edge(in2, target)
 
@@ -82,4 +94,4 @@ while f"z{bit_position:02d}" in wire_values:
 print(f"Output value: {output_value}")
 
 
-# problems z30, 
+# problems z30, z17
